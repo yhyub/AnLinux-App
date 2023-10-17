@@ -1,78 +1,22 @@
-name: CI
-# en: Set the event to pull request event and push event of the master branch
-# zh: Event 设置为 master 分支的 pull request 事件和 push 事件
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
-
-permissions:
-  contents: write
-
+name: Hello World
+on: push
 jobs:
-  CI:
+  my_first_job:
+    name: My first job
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code (检出代码)
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js (设置 node 版本)
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      - name: Install pnpm (安装 pnpm)
-        uses: pnpm/action-setup@v2
-        with:
-          version: 7.0.0
-
-      - name: Install dependencies (安装依赖)
-        run: pnpm install
-
-      - name: lint (代码检查)
-        run: pnpm run lint
-
-      # en: The template does not contain test cases. If you need to use test cases, you can uncomment it
-      # zh: 初始化模板中不包含测试用例，如需使用测试用例，可取消注释
-      # - name: Test (测试)
-      #   run: pnpm run test
-
-      - name: Build (构建)
-        run: pnpm run build
-
-      - name: Upload build artifacts (上传构建产物)
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist
-          path: ./dist
-
-      - name: Deploy to GitHub Pages (部署到 GitHub Pages)
-        uses: peaceiris/actions-gh-pages@v3
-        # en: Only deploy when the push event of the master branch is triggered
-        # zh: 仅在触发 master 分支的 push 事件时部署
-        if: github.ref == 'refs/heads/master'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-
-
-# ...
-- name: create pnpm-lock.yaml (创建 pnpm-lock.yaml)
-  run: pnpm install --frozen-lockfile --ignore-scripts
-
-- name: Get pnpm store directory (获取 pnpm store 目录)
-  id: pnpm-cache
-  shell: bash
-  run: |
-    echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-- name: Setup pnpm cache (设置 pnpm 缓存)
-  uses: actions/cache@v3
-  with:
-    path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-    key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-    restore-keys: |
-      ${{ runner.os }}-pnpm-store-
-
-# ...
+    - name: checkout
+      uses: actions/checkout@master
+    - name: Run a single-line script
+      run: echo "Hello World!"
+  my_second_job:
+    name: My second job
+    runs-on: macos-latest
+    steps:
+    - name: Run a multi-line script
+      env:
+        MY_VAR: Hello World!
+        MY_NAME: P3TERX
+      run: |
+        echo $MY_VAR
+        echo My name is $MY_NAME
