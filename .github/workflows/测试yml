@@ -1,0 +1,119 @@
+$ mkdir -p .github/workflows
+$ touch .github/workflows/CI.yaml
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the dev branch
+on:
+  push:
+    branches: [dev, master]
+  pull_request:
+    branches: [dev, master]
+strategy:
+    matrix:
+      os: [ubuntu-latest, macos-latest, windows-latest]
+      node: ["12", "13", "14"]
+name: install - ${{ matrix.os }} - ${{ matrix.node }}
+runs-on: ${{ matrix.os }}
+jobs:
+  install: # 定义安装依赖的任务
+    if: "!contains(github.event.head_commit.message, 'skip ci') && !contains(github.event.head_commit.message, '.md')" # 如果 commit 信息包含以下关键字则跳过该任务
+    strategy: # 分别在三个操作系统的三种 Node.js 环境中运行任务
+        matrix:
+          os: [ubuntu-latest, macos-latest, windows-latest]
+          node: ["12", "13", "14"]
+    name: install - ${{ matrix.os }} - ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: restore # 恢复之前缓存的依赖
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }} # 依赖缓存的 key 当 package.json 内容变动时丢弃缓存 也可以使用 package-lock.json or yarn.lock
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
+      - name: Install dependencies # 安装依赖
+        run: |
+          yarn
+
+test:
+    needs: install
+    strategy:
+        matrix:
+          os: [ubuntu-latest, macos-latest, windows-latest]
+          node: ["12", "13", "14"]
+    name: test - ${{ matrix.os }} - ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Load node_modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
+      - run: yarn test # 执行测试并生成覆盖率，这里一般都是接入 codecov 服务，需要配置 CODECOV_TOKEN 环境变量才能够上传
+  lint:
+    needs: install
+    strategy:
+        matrix:
+          os: [ubuntu-latest, macos-latest, windows-latest]
+          node: ["12", "13", "14"]
+    name: lint - ${{ matrix.os }} - ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Load node_modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
+      - run: yarn lint
+
+build:
+    needs: [lint, test]
+    strategy:
+        matrix:
+          os: [ubuntu-latest, macos-latest, windows-latest]
+          node: ["12", "13", "14"]
+    name: build - ${{ matrix.os }} - ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Load node_modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
+      - run: yarn build # 执行构建
+      - name: Upload artifact # 上传构建产物，这里我们的源码目录是 src，而实际运行的代码是构建后的 bin 目录
+        uses: actions/upload-artifact@v2
+        with:
+          name: build_output
+          path: bin # 上传 bin 目录
+
+$ npm token create
