@@ -1,119 +1,78 @@
-$ mkdir -p .github/workflows
-$ touch .github/workflows/CI.yaml
 name: CI
-
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the dev branch
+# en: Set the event to pull request event and push event of the master branch
+# zh: Event 设置为 master 分支的 pull request 事件和 push 事件
 on:
   push:
-    branches: [dev, master]
+    branches: [master]
   pull_request:
-    branches: [dev, master]
-strategy:
-    matrix:
-      os: [ubuntu-latest, macos-latest, windows-latest]
-      node: ["12", "13", "14"]
-name: install - ${{ matrix.os }} - ${{ matrix.node }}
-runs-on: ${{ matrix.os }}
+    branches: [master]
+
+permissions:
+  contents: write
+
 jobs:
-  install: # 定义安装依赖的任务
-    if: "!contains(github.event.head_commit.message, 'skip ci') && !contains(github.event.head_commit.message, '.md')" # 如果 commit 信息包含以下关键字则跳过该任务
-    strategy: # 分别在三个操作系统的三种 Node.js 环境中运行任务
-        matrix:
-          os: [ubuntu-latest, macos-latest, windows-latest]
-          node: ["12", "13", "14"]
-    name: install - ${{ matrix.os }} - ${{ matrix.node }}
-    runs-on: ${{ matrix.os }}
+  CI:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node }}
-      - name: restore # 恢复之前缓存的依赖
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }} # 依赖缓存的 key 当 package.json 内容变动时丢弃缓存 也可以使用 package-lock.json or yarn.lock
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
-      - name: Install dependencies # 安装依赖
-        run: |
-          yarn
+      - name: Checkout code (检出代码)
+        uses: actions/checkout@v3
 
-test:
-    needs: install
-    strategy:
-        matrix:
-          os: [ubuntu-latest, macos-latest, windows-latest]
-          node: ["12", "13", "14"]
-    name: test - ${{ matrix.os }} - ${{ matrix.node }}
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
+      - name: Setup Node.js (设置 node 版本)
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
-      - name: Load node_modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
-      - run: yarn test # 执行测试并生成覆盖率，这里一般都是接入 codecov 服务，需要配置 CODECOV_TOKEN 环境变量才能够上传
-  lint:
-    needs: install
-    strategy:
-        matrix:
-          os: [ubuntu-latest, macos-latest, windows-latest]
-          node: ["12", "13", "14"]
-    name: lint - ${{ matrix.os }} - ${{ matrix.node }}
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node }}
-      - name: Load node_modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
-      - run: yarn lint
+          node-version: 16
 
-build:
-    needs: [lint, test]
-    strategy:
-        matrix:
-          os: [ubuntu-latest, macos-latest, windows-latest]
-          node: ["12", "13", "14"]
-    name: build - ${{ matrix.os }} - ${{ matrix.node }}
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
+      - name: Install pnpm (安装 pnpm)
+        uses: pnpm/action-setup@v2
         with:
-          node-version: ${{ matrix.node }}
-      - name: Load node_modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
-      - run: yarn build # 执行构建
-      - name: Upload artifact # 上传构建产物，这里我们的源码目录是 src，而实际运行的代码是构建后的 bin 目录
-        uses: actions/upload-artifact@v2
-        with:
-          name: build_output
-          path: bin # 上传 bin 目录
+          version: 7.0.0
 
-$ npm token create
+      - name: Install dependencies (安装依赖)
+        run: pnpm install
+
+      - name: lint (代码检查)
+        run: pnpm run lint
+
+      # en: The template does not contain test cases. If you need to use test cases, you can uncomment it
+      # zh: 初始化模板中不包含测试用例，如需使用测试用例，可取消注释
+      # - name: Test (测试)
+      #   run: pnpm run test
+
+      - name: Build (构建)
+        run: pnpm run build
+
+      - name: Upload build artifacts (上传构建产物)
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: ./dist
+
+      - name: Deploy to GitHub Pages (部署到 GitHub Pages)
+        uses: peaceiris/actions-gh-pages@v3
+        # en: Only deploy when the push event of the master branch is triggered
+        # zh: 仅在触发 master 分支的 push 事件时部署
+        if: github.ref == 'refs/heads/master'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+
+
+# ...
+- name: create pnpm-lock.yaml (创建 pnpm-lock.yaml)
+  run: pnpm install --frozen-lockfile --ignore-scripts
+
+- name: Get pnpm store directory (获取 pnpm store 目录)
+  id: pnpm-cache
+  shell: bash
+  run: |
+    echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+- name: Setup pnpm cache (设置 pnpm 缓存)
+  uses: actions/cache@v3
+  with:
+    path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+    key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+    restore-keys: |
+      ${{ runner.os }}-pnpm-store-
+
+# ...
