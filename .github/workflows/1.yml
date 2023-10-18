@@ -26,22 +26,7 @@ jobs:
             echo "Directory not found"
             exit 1
           fi
-          
-      - name: Build go action
-        uses: actions-go/build@v1.0.1
-
-      - name: Universal APK Builder
-        uses: skywall/universal-apk-builder@v1.0.1
-
-      - name: Universal APK Builder Update
-        uses: yoshuaandrean/universal-apk@v1.5
-
-      - name: React Native Android Build APK
-        uses: realabbas/Github-Actions-React-Native@v1.1.2
-     
-      - name: Automate GitHub Projects
-        uses: NdagiStanley/github-project-automation@v0.1.3
-   
+      
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.3
         with:
