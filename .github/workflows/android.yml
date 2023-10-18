@@ -26,7 +26,10 @@ jobs:
             echo "Directory not found"
             exit 1
           fi
-
+          
+      - name: automated-build-android-app-with-github-action
+        uses: amirisback/automated-build-android-app-with-github-action@2.2.3
+        
       - name: Build go action
         uses: actions-go/build@v1.0.1
 
