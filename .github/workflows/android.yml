@@ -1,78 +1,29 @@
-name: Build and Upload APK
+name: Android CI
+
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set Directory
-        id: set_directory
-        run: |
-          if [[ -d "path/to/first/directory" ]]; then
-            echo "::set-output name=directory::path/to/first/directory"
-          elif [[ -d "path/to/second/directory" ]]; then
-            echo "::set-output name=directory::path/to/second/directory"
-          else
-            echo "Directory not found"
-            exit 1
-          fi
-          
-      - name: automated-build-android-app-with-github-action
-        uses: amirisback/automated-build-android-app-with-github-action@2.2.3
-        
-      - name: Build go action
-        uses: actions-go/build@v1.0.1
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
 
-      - name: Universal APK Builder
-        uses: skywall/universal-apk-builder@v1.0.1
+    - name: Build with Gradle
+      run: ./gradlew build
 
-      - name: Universal APK Builder Update
-        uses: yoshuaandrean/universal-apk@v1.5
-
-      - name: React Native Android Build APK
-        uses: realabbas/Github-Actions-React-Native@v1.1.2
-
-      - name: Build Android release APK when create new tag
-        uses: kyze8439690/action-release-releaseapk@1.0.0
-
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.3
-        with:
-          name: APK
-          path: path/to/apk/directory
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download APK from build
-        uses: actions/download-artifact@v1
-        with:
-          name: APK
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
-          draft: false
-          prerelease: false
-
-      - name: GitHub Releases
-        uses: fnkr/github-action-ghr@v1.3
-        with:
-          release: ${{ steps.create_release.outputs.upload_url }}
+    - name: Run tests
+      run: ./gradlew test
