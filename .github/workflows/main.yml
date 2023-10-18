@@ -37,4 +37,10 @@ jobs:
         else
           echo "Directory not found"
           exit 1
-        fi
+        fi- name: Release APK
+  # You may pin to the exact commit or the version.
+  # uses: ShowMeThe/github_action_release@c03188563c3286ccd20cf0d2b1413a134e3cabc9
+  uses: ShowMeThe/github_action_release@v0.01
+  with:
+    # Github secret token to allow automated publishing of APK to release.
+    GITHUB_TOKEN: # optional
