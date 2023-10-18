@@ -38,25 +38,7 @@ jobs:
 
       - name: React Native Android Build APK
         uses: realabbas/Github-Actions-React-Native@v1.1.2
-
-      - name: Build Android release APK when create new tag
-        uses: kyze8439690/action-release-releaseapk@1.0.0
-      
-      - name: NowSecure
-        uses: nowsecure/nowsecure-action@v1
-
-      - name: Fortify ScanCentral Scan
-        uses: fortify/gha-setup-scancentral-client@v1.2.0
-
-      - name: Qodana Scan
-        uses: JetBrains/qodana-action@v2023.2.8
-
-      - name: Erb Action
-        uses: revans/erb-action@v0.0.4
-
-      - name: Auto update your GitHub Action configuration files
-        uses: avides/actions-action-configuration-autoupdate@v1.3.0
-     
+        
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.3
         with:
