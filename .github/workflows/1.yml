@@ -21,11 +21,7 @@ jobs:
           if [[ -d "path/to/first/directory" ]]; then
             echo "::set-output name=directory::path/to/first/directory"
           elif [[ -d "path/to/second/directory" ]]; then
-            echo "::set-output name=directory::path/to/second/directory"
-          else
-            echo "Directory not found"
-            exit 1
-          fi
+            echo "::set-output name=directory::path/to/second/directory
           
       - name: automated-build-android-app-with-github-action
         uses: amirisback/automated-build-android-app-with-github-action@2.2.3
