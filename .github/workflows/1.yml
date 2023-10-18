@@ -18,11 +18,19 @@ jobs:
       - name: Set Directory
         id: set_directory
         run: |
-          if [[ -d "path/to/first/directory" ]]; then
-            echo "::set-output name=directory::path/to/first/directory"
-          elif [[ -d "path/to/second/directory" ]]; then
-            echo "::set-output name=directory::path/to/second/directory
-          
+          if [[ -d "${{ github.workspace }}/path/to/first/directory" ]]; then
+            echo "::set-output name=directory::${{ github.workspace }}/path/to/first/directory"
+          elif [[ -d "${{ github.workspace }}/path/to/second/directory" ]]; then
+            echo "::set-output name=directory::${{ github.workspace }}/path/to/second/directory"
+          else
+            echo "Directory not found"
+            exit 1
+          fi
+
+      - name: Fix Dockerfile path
+        run: |
+          sed -i "s|Dockerfile|${{ github.workspace }}/Dockerfile|" ${{ steps.set_directory.outputs.directory }}/Dockerfile
+             
       - name: automated-build-android-app-with-github-action
         uses: amirisback/automated-build-android-app-with-github-action@2.2.3
         
