@@ -25,6 +25,12 @@ jobs:
           chmod +x install.sh
           ./install.sh
 
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          sdk-platform: 'platforms;android-30'
+          ndk-version: '21.4.7075529'
+
       - name: Install Android Studio
         run: |
           sudo apt-get update
@@ -34,22 +40,16 @@ jobs:
       - name: Install Apktool
         run: |
           sudo apt-get update
-          sudo apt-get install -y default-jre
-          wget https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
-          wget https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.5.0.jar
-          sudo mv apktool_2.5.0.jar /usr/local/bin/apktool.jar
-          sudo mv apktool /usr/local/bin/
-          sudo chmod +x /usr/local/bin/apktool
-          sudo chmod +x /usr/local/bin/apktool.jar
+          sudo apt-get install -y apktool
 
       - name: Build with Gradle
         run: ./gradlew assembleDebug
 
       - name: Package APK
-        run: mv app/build/outputs/apk/debug/app-debug.apk ${{ github.workspace }}/AnLinux-App/.github/workflows/my-app-debug.apk
+        run: mv app/build/outputs/apk/debug/app-debug.apk ${{ github.workspace }}/app-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
           name: my-app-debug
-          path: ${{ github.workspace }}/AnLinux-App/.github/workflows/my-app-debug.apk
+          path: ${{ github.workspace }}/app-debug.apk
