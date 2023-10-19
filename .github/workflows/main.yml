@@ -16,6 +16,15 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+          java-package: 'jdk'
+          architecture: 'x64'
+          check-latest: false
+          server-id: 'github'
+          server-username: ${{ github.actor }}
+          server-password: ${{ secrets.GITHUB_TOKEN }}
+          overwrite-settings: true
+          job-status: 'success'
+          distribution: 'adopt'
 
       - name: Install Termux
         run: |
