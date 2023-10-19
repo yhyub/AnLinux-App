@@ -1,5 +1,4 @@
 name: Build and Package APK
-
 on:
   push:
     branches:
@@ -17,6 +16,31 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+
+      - name: Install Termux
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://termux.com/install.sh
+          chmod +x install.sh
+          ./install.sh
+
+      - name: Install Android Studio
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y snapd
+          sudo snap install android-studio --classic
+
+      - name: Install Apktool
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre
+          wget https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool
+          wget https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.5.0.jar
+          sudo mv apktool_2.5.0.jar /usr/local/bin/apktool.jar
+          sudo mv apktool /usr/local/bin/
+          sudo chmod +x /usr/local/bin/apktool
+          sudo chmod +x /usr/local/bin/apktool.jar
 
       - name: Build with Gradle
         run: ./gradlew assembleDebug
