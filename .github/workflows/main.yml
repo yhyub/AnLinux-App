@@ -72,4 +72,4 @@ steps:
     uses: JamesIves/github-pages-deploy-action@v4.3.3
     with:
       branch: static-pages
-      folder: dist
+      folder: 
