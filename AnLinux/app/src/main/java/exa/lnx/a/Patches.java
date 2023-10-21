@@ -117,9 +117,9 @@ public class Patches extends Fragment {
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-        if(patches.equals("Ashmem")){
+        if("Ashmem".equals(patches)){
             checkBox.setChecked(true);
-        }else if(patches.equals("SECCOMP")){
+        }else if("SECCOMP".equals(patches)){
             checkBox2.setChecked(true);
         }
         checkBox.setOnClickListener(new View.OnClickListener() {

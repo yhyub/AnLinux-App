@@ -158,33 +158,33 @@ public class Uninstaller extends Fragment{
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-        if(distro.equals("Ubuntu")){
+        if("Ubuntu".equals(distro)){
             checkBox.setChecked(true);
-        }else if(distro.equals("Debian")){
+        }else if("Debian".equals(distro)){
             checkBox2.setChecked(true);
-        }else if(distro.equals("Kali")){
+        }else if("Kali".equals(distro)){
             checkBox3.setChecked(true);
-        }else if(distro.equals("Nethunter")){
+        }else if("Nethunter".equals(distro)){
             checkBox4.setChecked(true);
-        }else if(distro.equals("Parrot")){
+        }else if("Parrot".equals(distro)){
             checkBox5.setChecked(true);
-        }else if(distro.equals("BackBox")){
+        }else if("BackBox".equals(distro)){
             checkBox6.setChecked(true);
-        }else if(distro.equals("Fedora")){
+        }else if("Fedora".equals(distro)){
             checkBox7.setChecked(true);
-        }else if(distro.equals("CentOS")){
+        }else if("CentOS".equals(distro)){
             checkBox8.setChecked(true);
-        }else if(distro.equals("Leap")){
+        }else if("Leap".equals(distro)){
             checkBox9.setChecked(true);
-        }else if(distro.equals("Tumbleweed")){
+        }else if("Tumbleweed".equals(distro)){
             checkBox10.setChecked(true);
-        }else if(distro.equals("Arch")){
+        }else if("Arch".equals(distro)){
             checkBox11.setChecked(true);
-        }else if(distro.equals("BlackArch")){
+        }else if("BlackArch".equals(distro)){
             checkBox12.setChecked(true);
-        }else if(distro.equals("Alpine")){
+        }else if("Alpine".equals(distro)){
             checkBox13.setChecked(true);
-        }else if(distro.equals("Void")){
+        }else if("Void".equals(distro)){
             checkBox14.setChecked(true);
         }
 
@@ -440,7 +440,7 @@ public class Uninstaller extends Fragment{
                 checkBox13.setChecked(false);
             }
         });
-        if(s.equals("i386")){
+        if("i386".equals(s)){
             checkBox7.setEnabled(false);
             checkBox9.setEnabled(false);
             checkBox11.setEnabled(false);
