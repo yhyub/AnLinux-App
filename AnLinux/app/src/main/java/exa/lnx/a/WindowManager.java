@@ -140,17 +140,17 @@ public class WindowManager extends Fragment {
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-        if(distro.equals("Ubuntu")){
+        if("Ubuntu".equals(distro)){
             checkBox.setChecked(true);
-        }else if(distro.equals("Debian")){
+        }else if("Debian".equals(distro)){
             checkBox2.setChecked(true);
-        }else if(distro.equals("Kali")){
+        }else if("Kali".equals(distro)){
             checkBox3.setChecked(true);
-        }else if(distro.equals("Parrot")){
+        }else if("Parrot".equals(distro)){
             checkBox4.setChecked(true);
-        }else if(distro.equals("BackVox")){
+        }else if("BackVox".equals(distro)){
             checkBox5.setChecked(true);
-        }else if(distro.equals("Fedora")){
+        }else if("Fedora".equals(distro)){
             checkBox6.setChecked(true);
         }
 
@@ -215,7 +215,7 @@ public class WindowManager extends Fragment {
             }
         });
 
-        if(s.equals("i386")){
+        if("i386".equals(s)){
             checkBox6.setEnabled(false);
             checkBox6.setText(R.string.not_Supported);
         }
@@ -309,9 +309,9 @@ public class WindowManager extends Fragment {
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-        if(wm.equals("Awesome")){
+        if("Awesome".equals(wm)){
             checkBox.setChecked(true);
-        }else if(wm.equals("IceWM")){
+        }else if("IceWM".equals(wm)){
             checkBox2.setChecked(true);
         }
 

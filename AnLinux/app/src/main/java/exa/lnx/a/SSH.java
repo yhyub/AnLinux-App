@@ -140,21 +140,21 @@ public class SSH extends Fragment {
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-        if(distro.equals("Ubuntu")){
+        if("Ubuntu".equals(distro)){
             checkBox.setChecked(true);
-        }else if(distro.equals("Debian")){
+        }else if("Debian".equals(distro)){
             checkBox2.setChecked(true);
-        }else if(distro.equals("Kali")){
+        }else if("Kali".equals(distro)){
             checkBox3.setChecked(true);
-        }else if(distro.equals("Parrot")){
+        }else if("Parrot".equals(distro)){
             checkBox4.setChecked(true);
-        }else if(distro.equals("BackBox")){
+        }else if("BackBox".equals(distro)){
             checkBox5.setChecked(true);
-        }else if(distro.equals("Fedora")){
+        }else if("Fedora".equals(distro)){
             checkBox6.setChecked(true);
-        }else if(distro.equals("CentOS")){
+        }else if("CentOS".equals(distro)){
             checkBox7.setChecked(true);
-        }else if(distro.equals("Arch")){
+        }else if("Arch".equals(distro)){
             checkBox8.setChecked(true);
         }
 
@@ -254,7 +254,7 @@ public class SSH extends Fragment {
                 checkBox7.setChecked(false);
             }
         });
-        if(s.equals("i386")){
+        if("i386".equals(s)){
             checkBox6.setEnabled(false);
             checkBox6.setText(R.string.not_Supported);
             checkBox8.setEnabled(false);

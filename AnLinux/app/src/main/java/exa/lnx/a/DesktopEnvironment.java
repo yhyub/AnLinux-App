@@ -167,19 +167,19 @@ public class DesktopEnvironment extends Fragment {
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-        if(distro.equals("Ubuntu")){
+        if("Ubuntu".equals(distro)){
             checkBox.setChecked(true);
-        }else if(distro.equals("Debian")){
+        }else if("Debian".equals(distro)){
             checkBox2.setChecked(true);
-        }else if(distro.equals("Kali")){
+        }else if("Kali".equals(distro)){
             checkBox3.setChecked(true);
-        }else if(distro.equals("Parrot")){
+        }else if("Parrot".equals(distro)){
             checkBox4.setChecked(true);
-        }else if(distro.equals("BackBox")){
+        }else if("BackBox".equals(distro)){
             checkBox5.setChecked(true);
-        }else if(distro.equals("Fedora")){
+        }else if("Fedora".equals(distro)){
             checkBox6.setChecked(true);
-        }else if(distro.equals("Arch")){
+        }else if("Arch".equals(distro)){
             checkBox7.setChecked(true);
         }
 
@@ -260,7 +260,7 @@ public class DesktopEnvironment extends Fragment {
                 checkBox6.setChecked(false);
             }
         });
-        if(s.equals("i386")){
+        if("i386".equals(s)){
             checkBox6.setEnabled(false);
             checkBox6.setText(R.string.not_Supported);
             checkBox7.setEnabled(false);
@@ -369,19 +369,19 @@ public class DesktopEnvironment extends Fragment {
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-        if(desktop.equals("Xfce4")){
-            if(!distro.equals("Arch")){
+        if("Xfce4".equals(desktop)){
+            if(!"Arch".equals(distro)){
                 checkBox.setChecked(true);
             }
-        }else if(desktop.equals("Mate")){
-            if(!distro.equals("Arch")){
+        }else if("Mate".equals(desktop)){
+            if(!"Arch".equals(distro)){
                 checkBox2.setChecked(true);
             }
-        }else if(desktop.equals("LXQt")){
-            if(!distro.equals("Arch")){
+        }else if("LXQt".equals(desktop)){
+            if(!"Arch".equals(distro)){
                 checkBox3.setChecked(true);
             }
-        }else if(desktop.equals("LXDE")){
+        }else if("LXDE".equals(desktop)){
             checkBox4.setChecked(true);
         }
 
@@ -417,7 +417,7 @@ public class DesktopEnvironment extends Fragment {
                 checkBox3.setChecked(false);
             }
         });
-        if(distro.equals("Arch")){
+        if("Arch".equals(distro)){
             checkBox.setText(R.string.not_available);
             checkBox2.setText(R.string.not_available);
             checkBox3.setText(R.string.not_available);
