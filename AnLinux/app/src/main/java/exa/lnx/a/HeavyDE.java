@@ -125,7 +125,7 @@ public class HeavyDE extends Fragment {
         alertDialog.setView(view);
         alertDialog.setCancelable(false);
 
-        if(desktop.equals("KDE")){
+        if("KDE".equals(desktop)){
             checkBox.setChecked(true);
         }
 
@@ -169,17 +169,17 @@ public class HeavyDE extends Fragment {
         final CheckBox checkBox5 = view.findViewById(R.id.checkBox5);
         final CheckBox checkBox6 = view.findViewById(R.id.checkBox6);
 
-        if(distro.equals("Ubuntu")){
+        if("Ubuntu".equals(distro)){
             checkBox.setChecked(true);
-        }else if(distro.equals("Debian")){
+        }else if("Debian".equals(distro)){
             checkBox2.setChecked(true);
-        }else if(distro.equals("Kali")){
+        }else if("Kali".equals(distro)){
             checkBox3.setChecked(true);
-        }else if(distro.equals("Parrot")){
+        }else if("Parrot".equals(distro)){
             checkBox4.setChecked(true);
-        }else if(distro.equals("BackBox")){
+        }else if("BackBox".equals(distro)){
             checkBox5.setChecked(true);
-        }else if(distro.equals("Fedora")){
+        }else if("Fedora".equals(distro)){
             checkBox6.setChecked(true);
         }
 
